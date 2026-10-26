@@ -1,0 +1,19 @@
+# Entorno virtual
+venv/
+env/
+ENV/
+
+# Archivos de caché de Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Base de datos local (puedes incluirla si quieres que baje tal cual tus datos de prueba, pero por buenas prácticas se suele ignorar o subir una inicial)
+# db.sqlite3
+
+# Archivos multimedia subidos por usuarios (si quieres excluirlos de Git)
+media/
+
+# Configuración del sistema operativo
+.DS_Store
+Thumbs.db
