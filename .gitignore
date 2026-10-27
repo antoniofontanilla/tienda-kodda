@@ -17,3 +17,8 @@ media/
 # Configuración del sistema operativo
 .DS_Store
 Thumbs.db
+venv/
+__pycache__/
+*.pyc
+db.sqlite3
+media/

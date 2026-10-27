@@ -93,3 +93,30 @@ def eliminar_categoria(request, pk):
         categoria.delete()
         return redirect('lista_categorias')
     return render(request, 'productos/confirmar_eliminacion.html', {'objeto': categoria, 'tipo': 'categoría'})
+
+# ================= VISTA PÚBLICA / CATÁLOGO =================
+
+def catalogo(request):
+    query = request.GET.get('q', '')
+    categoria_id = request.GET.get('categoria', '')
+    
+    productos = Producto.objects.all()
+    categorias = Categoria.objects.all()
+    
+    # Filtro por búsqueda de texto
+    if query:
+        productos = productos.filter(
+            Q(nombre__icontains=query) | Q(categoria__nombre__icontains=query)
+        )
+        
+    # Filtro por categoría seleccionada
+    if categoria_id:
+        productos = productos.filter(categoria_id=categoria_id)
+        
+    context = {
+        'productos': productos,
+        'categorias': categorias,
+        'query': query,
+        'categoria_seleccionada': int(categoria_id) if categoria_id.isdigit() else None,
+    }
+    return render(request, 'productos/catalogo.html', context)

@@ -12,6 +12,7 @@ class Categoria(models.Model):
 class Producto(models.Model):
     nombre = models.CharField(max_length=150, verbose_name="Nombre del Producto")
     precio = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Precio")
+    descripcion = models.TextField(blank=True, null=True)
     stock = models.IntegerField(verbose_name="Stock disponible")
     # Relación: Un producto pertenece a una sola categoría (ForeignKey)
     categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE, verbose_name="Categoría")

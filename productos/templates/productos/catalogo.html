@@ -1,0 +1,115 @@
+{% extends 'productos/base.html' %}
+
+{% block title %}Tienda Kodda | Catálogo Oficial{% endblock %}
+
+{% block content %}
+    <!-- Banner Promocional Principal -->
+    <div class="hero-banner mb-5 text-center text-md-start shadow-sm">
+        <div class="row align-items-center">
+            <div class="col-md-8 px-4">
+                <h1 class="display-5 fw-bold mb-2">Descubre Nuestros Productos</h1>
+                <p class="lead text-light opacity-75 mb-4">Calidad, innovación y tecnología a tu alcance. Explora nuestro catálogo completo.</p>
+                <a href="#productos-section" class="btn btn-primary btn-lg px-4 me-md-2">Ver Catálogo</a>
+            </div>
+            <div class="col-md-4 text-center d-none d-md-block">
+                <i class="bi bi-bag-check-fill display-1 text-primary opacity-50"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección de Filtros y Búsqueda -->
+    <div class="row mb-4 align-items-center g-3" id="productos-section">
+        <div class="col-md-6">
+            <h3 class="fw-bold mb-0">Nuestros Productos</h3>
+        </div>
+        <div class="col-md-6">
+            <form method="GET" action="{% url 'catalogo' %}" class="d-flex gap-2">
+                {% if categoria_seleccionada %}
+                    <input type="hidden" name="categoria" value="{{ categoria_seleccionada }}">
+                {% endif %}
+                <div class="input-group">
+                    <input type="text" name="q" value="{{ query }}" class="form-control" placeholder="Buscar por nombre o categoría...">
+                    <button class="btn btn-outline-secondary" type="submit">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+                {% if query or categoria_seleccionada %}
+                    <a href="{% url 'catalogo' %}" class="btn btn-outline-danger" title="Limpiar filtros">
+                        <i class="bi bi-x-lg"></i>
+                    </a>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+
+    <!-- Categorías (Filtros en forma de botones) -->
+    <div class="d-flex flex-wrap gap-2 mb-4">
+        <a href="{% url 'catalogo' %}{% if query %}?q={{ query }}{% endif %}" 
+           class="btn btn-sm {% if not categoria_seleccionada %}btn-dark{% else %}btn-outline-dark{% endif %} rounded-pill px-3">
+            Todas
+        </a>
+        {% for cat in categorias %}
+            <a href="{% url 'catalogo' %}?categoria={{ cat.id }}{% if query %}&q={{ query }}{% endif %}" 
+               class="btn btn-sm {% if categoria_seleccionada == cat.id %}btn-dark{% else %}btn-outline-dark{% endif %} rounded-pill px-3">
+                {{ cat.nombre }}
+            </a>
+        {% endfor %}
+    </div>
+
+    <!-- Grilla de Productos -->
+    {% if productos %}
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+            {% for producto in productos %}
+                <div class="col">
+                    <div class="card h-100 shadow-sm card-product">
+                        <!-- Imagen del Producto -->
+                        {% if producto.imagen %}
+                            <img src="{{ producto.imagen.url }}" class="card-img-top product-img" alt="{{ producto.nombre }}">
+                        {% else %}
+                            <div class="bg-secondary bg-opacity-10 text-secondary d-flex align-items-center justify-content-center product-img">
+                                <i class="bi bi-image fs-1 opacity-50"></i>
+                            </div>
+                        {% endif %}
+                        
+                        <div class="card-body d-flex flex-column">
+                            <div class="mb-2">
+                                <span class="badge bg-primary-subtle text-primary border border-primary-subtle badge-category">
+                                    {{ producto.categoria.nombre }}
+                                </span>
+                            </div>
+                            <h5 class="card-title fw-bold text-dark fs-6 mb-1">{{ producto.nombre }}</h5>
+                            
+                            <!-- Descripción Cortada Automáticamente -->
+                            {% if producto.descripcion %}
+                                <p class="card-text text-muted small mb-3">{{ producto.descripcion|truncatechars:65 }}</p>
+                            {% endif %}
+                            
+                            <div class="mt-auto pt-2 d-flex align-items-center justify-content-between">
+                                <span class="fs-5 fw-bold text-dark">$ {{ producto.precio|floatformat:0 }}</span>
+                                <button onclick="agregarAlCarrito('{{ producto.nombre }}', {{ producto.precio }})" class="btn btn-outline-primary btn-sm rounded-circle">
+                                    <i class="bi bi-cart-plus fs-6"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent border-0 pt-0 pb-3">
+                            <small class="text-muted">
+                                {% if producto.stock > 0 %}
+                                    <i class="bi bi-check-circle-fill text-success me-1"></i>Stock: {{ producto.stock }} u.
+                                {% else %}
+                                    <i class="bi bi-x-circle-fill text-danger me-1"></i>Agotado
+                                {% endif %}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-warning text-center py-5 shadow-sm rounded-3">
+            <i class="bi bi-exclamation-triangle fs-1 text-warning d-block mb-2"></i>
+            <h4>No se encontraron productos</h4>
+            <p class="mb-3 text-muted">Intenta ajustando el término de búsqueda o selecciona otra categoría.</p>
+            <a href="{% url 'catalogo' %}" class="btn btn-dark btn-sm">Ver todos los productos</a>
+        </div>
+    {% endif %}
+{% endblock %}
