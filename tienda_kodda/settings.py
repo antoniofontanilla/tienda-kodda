@@ -142,9 +142,9 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Configuración de Cloudinary para imágenes en la nube
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'tu_cloud_name',
-    'API_KEY': 'tu_api_key',
-    'API_SECRET': 'tu_api_secret',
+    'CLOUD_NAME': 'dbnok3m9x',
+    'API_KEY': '769794153275263',
+    'API_SECRET': '9TrsErIqE7rFSw-zco8V2InqDhY',
 }
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
